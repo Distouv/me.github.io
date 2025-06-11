@@ -1,4 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+.inter-200 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+
+
+.inter-300 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.inter-400 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.inter-500 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+
 /* Error 404 Page Styles */
+
+/* Override any portada styles from other CSS files */
+.portada.error-image {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
 
 /* Ajustes para que la página de error ocupe toda la altura */
 body {
@@ -49,8 +87,9 @@ main {
     width: 360px; /* 300px * 1.2 = 360px (20% más ancha) */
     height: 420px; /* 350px * 1.2 = 420px (20% más alta) */
     max-height: 70vh; /* Incrementado para permitir el aumento de tamaño */
-    border-radius: 8px;
     overflow: hidden;
+    border-radius: 0; /* Overriding border-radius */
+    box-shadow: none !important; /* Removing box-shadow */
 }
 
 .error-image > img {
@@ -58,6 +97,8 @@ main {
     height: 100%;
     object-fit: cover;
     object-position: center;
+    filter: none !important; /* Ensure no filters are applied */
+    box-shadow: none !important; /* Ensure no shadows */
 }
 
 
@@ -96,11 +137,12 @@ main {
         text-align: center;
         padding: 0 20px;
     }
-    
-    .error-image {
+      .error-image {
         width: 240px; /* 200px * 1.2 = 240px (20% más ancha) */
         height: 300px; /* 250px * 1.2 = 300px (20% más alta) */
     }
+    
+    /* Quitamos la propiedad filter */
     
     .error-text h2 {
         font-size: 2.5rem;
@@ -124,11 +166,12 @@ main {
         gap: 30px;
         padding: 0 20px;
     }
-    
-    .error-image {
+      .error-image {
         width: 300px; /* 250px * 1.2 = 300px (20% más ancha) */
         height: 420px; /* 350px * 1.2 = 420px (20% más alta) */
     }
+    
+    /* Quitamos la propiedad filter */
     
     .error-text h2 {
         font-size: 2.5rem;
@@ -146,12 +189,13 @@ main {
         gap: 20px;
         text-align: center;
     }
-    
-    .error-image {
+      .error-image {
         width: 85%; /* Ligeramente más ancha que antes */
         height: 300px; /* 250px * 1.2 = 300px (20% más alta) */
         margin: 0 auto;
     }
+    
+    /* Quitamos la propiedad filter */
     
     .error-text {
         padding: 20px;

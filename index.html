@@ -1,11 +1,121 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Distouv Me</title>
+    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Distouv Me - Portal de presentación de portafolios web">
+    <link rel="stylesheet" href="static/css/general.css">
+    <link rel="stylesheet" href="static/css/index_new.css">
+    <title>Distouv Me | Portal de Portafolios Web</title>
 </head>
 <body>
+    <div id="navbar"></div>
     
+    <main>
+        <section class="hero">
+            <div class="container">
+                <div class="line hero-line">
+                    <div class="portada">
+                        <img src="https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop" alt="Imagen de portada">
+                    </div>
+                    <div class="txt hero-text inter-200">
+                        <h1 class="inter-300">Distouv Me</h1>
+                        <p>Un espacio para mostrar y descubrir portafolios web creativos y profesionales.</p>
+                        <div class="cta-container">
+                            <a href="#portfolios" class="primary-button inter-300">Ver Portafolios</a>
+                            <a href="#contact" class="secondary-button inter-300">Contactar</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features-section inter-200">
+            <div class="container">
+                <h2 class="section-title inter-400">¿Por qué Distouv Me?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon inter-300">✨</div>
+                        <h3 class="inter-400">Creatividad Visual</h3>
+                        <p class="inter-200">Presentamos portafolios con diseños únicos y atractivos que destacan en el mundo digital y capturan la esencia de cada creador.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon inter-300">💻</div>
+                        <h3 class="inter-400">Tecnología Avanzada</h3>
+                        <p class="inter-200">Implementamos las últimas tecnologías web para crear experiencias interactivas que conectan con las audiencias modernas.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon inter-300">🚀</div>
+                        <h3 class="inter-400">Rendimiento Superior</h3>
+                        <p class="inter-200">Optimizamos cada portafolio para que funcione perfectamente en cualquier dispositivo, con velocidad y fluidez excepcional.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolios" class="portfolios-section inter-200">
+            <div class="container">
+                <h2 class="section-title inter-400">Portafolios Destacados</h2>
+                <div class="portfolios-grid">
+                    <div class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?q=80&w=1000&auto=format&fit=crop" alt="Portafolio 1">
+                        </div>
+                        <div class="portfolio-info">
+                            <h3 class="inter-400">Diseño Web Creativo</h3>
+                            <p class="inter-200">Portafolios especializados en diseño web con enfoque creativo y funcional.</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop" alt="Portafolio 2">
+                        </div>
+                        <div class="portfolio-info">
+                            <h3 class="inter-400">Desarrollo Frontend</h3>
+                            <p class="inter-200">Proyectos enfocados en crear interfaces de usuario impresionantes y responsivas.</p>
+                        </div>
+                    </div>
+                    <div class="portfolio-card">
+                        <div class="portfolio-image">
+                            <img src="https://images.unsplash.com/photo-1542744095-fcf48d80b0fd?q=80&w=1000&auto=format&fit=crop" alt="Portafolio 3">
+                        </div>
+                        <div class="portfolio-info">
+                            <h3 class="inter-400">Aplicaciones Fullstack</h3>
+                            <p class="inter-200">Soluciones completas que integran frontend y backend para proyectos empresariales.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="portfolio-cta">
+                    <a href="#contact" class="primary-button inter-300">Crea tu portafolio</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section inter-200">
+            <div class="container">
+                <h2 class="section-title inter-400">¿Listo para mostrar tu trabajo?</h2>
+                <p class="contact-description inter-200">Nos encantaría conocer tus proyectos y ayudarte a crear un portafolio impactante.</p>
+                <div class="contact-form-container">
+                    <form class="contact-form">
+                        <div class="form-group">
+                            <label for="name" class="inter-200">Nombre</label>
+                            <input type="text" id="name" name="name" class="inter-200" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="inter-200">Email</label>
+                            <input type="email" id="email" name="email" class="inter-200" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message" class="inter-200">Mensaje</label>
+                            <textarea id="message" name="message" rows="5" class="inter-200" required></textarea>
+                        </div>
+                        <button type="submit" class="primary-button inter-300">Enviar mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer"></div>
+    <script src="static/js/layout.js"></script>
 </body>
 </html>
