@@ -1,0 +1,191 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  color: inherit;
+  list-style: none;
+}
+
+nav > h2, .footer-container > h2 {
+  font-size: 1.7rem;
+  font-weight: 500;
+  margin-left: 0;
+}
+
+
+h2 {
+  font-size: 4rem;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.line {
+  margin-top: 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 80px); /* Ajustar para considerar el navbar */
+  padding: 0px 20px 20px 20px; /* Eliminar padding superior */
+}
+
+*::after {
+  text-decoration: none;
+  color: inherit;
+}
+
+.inter-200 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 200;
+  font-style: normal;
+}
+
+
+.inter-300 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.inter-400 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.inter-500 {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background-color: #ffffff;
+  margin-left: 30px;
+  margin-right: 50px;
+  margin-top: 20px;
+  margin-bottom: 0px;
+ }
+
+ footer {
+    width: 100%;
+    padding: 20px 50px;
+    margin-top: 40px;
+}
+
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.footer-phrase {
+    font-weight: 300;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.footer-sign {
+    font-size: 0.9rem;
+    margin: 0;
+    text-align: right;
+}
+
+.footer-container > h2 {
+    margin-bottom: 5px;
+}
+
+footer a {
+    color: inherit;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* --- RESPONSIVE DESIGN GENERAL --- */
+
+@media (max-width: 1024px) {
+  .navbar {
+    margin-left: 20px;
+    margin-right: 10px;
+    padding: 0.5rem 1.5rem;
+  }
+  main {
+    padding: 0px 5vw 20px 5vw;
+  }
+  .footer-container {
+    padding: 0 10px;
+  }
+  footer {
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0.5rem 0.5rem;
+  }
+  main {
+    padding: 0px 2vw 10px 2vw;
+  }
+  .line {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .footer-container {
+    padding: 0 2vw;
+  }
+  .footer-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+  .footer-sign {
+    text-align: left;
+    width: 100%;
+  }
+  footer {
+    padding: 20px 2vw;
+  }
+}
