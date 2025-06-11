@@ -1,10 +1,38 @@
 /* Error 404 Page Styles */
 
+/* Ajustes para que la página de error ocupe toda la altura */
+body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Altura fija de 100vh */
+    max-height: 100vh; /* Altura máxima de 100vh */
+    overflow-y: auto; /* Permitir scroll si el contenido es mayor */
+}
+
+main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: calc(100vh - 250px); /* Ajustar según la altura del navbar y footer */
+    overflow-y: auto;
+}
+
+#footer {
+    margin-top: auto;
+}
+
 .error-container {
-    min-height: 60vh;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+    max-height: 100%;
 }
 
 .error-line {
@@ -14,11 +42,13 @@
     justify-content: center;
     gap: 40px;
     max-width: 1000px;
+    max-height: 100%;
 }
 
 .error-image {
-    width: 300px;
-    height: 400px;
+    width: 360px; /* 300px * 1.2 = 360px (20% más ancha) */
+    height: 420px; /* 350px * 1.2 = 420px (20% más alta) */
+    max-height: 70vh; /* Incrementado para permitir el aumento de tamaño */
     border-radius: 8px;
     overflow: hidden;
 }
@@ -58,6 +88,28 @@
     transition: all 0.3s ease;
     align-self: flex-start;
 }
+    
+/* Media queries para dispositivos móviles */
+@media (max-width: 768px) {
+    .error-line {
+        flex-direction: column;
+        text-align: center;
+        padding: 0 20px;
+    }
+    
+    .error-image {
+        width: 240px; /* 200px * 1.2 = 240px (20% más ancha) */
+        height: 300px; /* 250px * 1.2 = 300px (20% más alta) */
+    }
+    
+    .error-text h2 {
+        font-size: 2.5rem;
+    }
+    
+    .error-button {
+        align-self: center;
+    }
+}
 
 .error-button:hover {
     background-color: #333;
@@ -74,8 +126,8 @@
     }
     
     .error-image {
-        width: 250px;
-        height: 350px;
+        width: 300px; /* 250px * 1.2 = 300px (20% más ancha) */
+        height: 420px; /* 350px * 1.2 = 420px (20% más alta) */
     }
     
     .error-text h2 {
@@ -96,8 +148,8 @@
     }
     
     .error-image {
-        width: 80%;
-        height: 250px;
+        width: 85%; /* Ligeramente más ancha que antes */
+        height: 300px; /* 250px * 1.2 = 300px (20% más alta) */
         margin: 0 auto;
     }
     
