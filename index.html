@@ -108,227 +108,84 @@
                             <textarea id="mensaje" name="mensaje" rows="5" class="inter-200" required></textarea>
                         </div>
                         <button type="submit" class="primary-button inter-300">Enviar mensaje</button>
-                    </form>                    <script>
-                        // URL del script de Google
-                        const scriptURL = 'https://script.google.com/macros/s/AKfycbzVD39wEmUb78FAJ38ipB5c5C_SpWJ-JArMnzzsnwFfxp1ISt24lF_w5G3jSW6Z4H9n/exec';
-                        // Verificar la URL en consola para depuración
-                        console.log('Google Apps Script URL:', scriptURL);
-                        
-                        // Función para crear notificación reutilizable
-                        function crearNotificacion(mensaje, tipo = 'info') {
-                            // Eliminar notificación anterior si existe
-                            const notificacionAnterior = document.getElementById('form-notificacion');
-                            if (notificacionAnterior) {
-                                document.body.removeChild(notificacionAnterior);
-                            }
-                            
-                            // Configurar estilos según tipo
-                            let bgColor, textColor;
-                            switch(tipo) {
-                                case 'success':
-                                    bgColor = '#d4edda';
-                                    textColor = '#155724';
-                                    break;
-                                case 'error':
-                                    bgColor = '#f8d7da';
-                                    textColor = '#721c24';
-                                    break;
-                                default:
-                                    bgColor = '#f8f9fa';
-                                    textColor = '#212529';
-                            }
-                            
-                            // Crear elemento de notificación
-                            const notificacion = document.createElement('div');
-                            notificacion.id = 'form-notificacion';
-                            notificacion.style.position = 'fixed';
-                            notificacion.style.top = '10px';
-                            notificacion.style.left = '50%';
-                            notificacion.style.transform = 'translateX(-50%)';
-                            notificacion.style.backgroundColor = bgColor;
-                            notificacion.style.color = textColor;
-                            notificacion.style.padding = '12px 20px';
-                            notificacion.style.borderRadius = '4px';
-                            notificacion.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-                            notificacion.style.zIndex = '1000';
-                            notificacion.textContent = mensaje;
-                            
-                            document.body.appendChild(notificacion);
-                            return notificacion;
-                        }
-                          // Enviar datos a Google Apps Script usando un formato que espera
-                        function enviarFormulario(form) {
-                            // Obtener datos del formulario
-                            const nombre = form.nombre.value;
-                            const email = form.email.value;
-                            const mensaje = form.mensaje.value;
-                            
-                            if (!nombre || !email || !mensaje) {
-                                crearNotificacion('Por favor complete todos los campos requeridos.', 'error');
-                                return Promise.reject(new Error('Campos incompletos'));
-                            }
-                            
-                            console.log('Enviando datos:', { nombre, email, mensaje });
-                            
-                            // Los Google Apps Script generalmente esperan datos como JSON
-                            const jsonData = JSON.stringify({
-                                nombre: nombre,
-                                email: email,
-                                mensaje: mensaje
-                            });
-                            
-                            // Para depuración - mostrar lo que estamos enviando
-                            console.log('JSON enviado:', jsonData);
-                            
-                            // Método 1: Envío tradicional con fetch y no-cors
-                            return fetch(scriptURL, {
-                                method: 'POST',
-                                mode: 'no-cors',
-                                headers: {
-                                    'Content-Type': 'application/json'
-                                },
-                                body: jsonData
-                            });
-                        }
-                          // Método alternativo usando un iframe oculto (método de respaldo)
-                        function enviarViaIframe(formData) {
-                            return new Promise((resolve, reject) => {
-                                try {
-                                    // Crear un iframe temporal para envío
-                                    const iframe = document.createElement('iframe');
-                                    iframe.name = 'contact-submit-iframe';
-                                    iframe.style.display = 'none';
-                                    document.body.appendChild(iframe);
-                                    
-                                    // Crear un formulario dentro del documento
-                                    const tempForm = document.createElement('form');
-                                    tempForm.target = 'contact-submit-iframe';
-                                    tempForm.action = scriptURL;
-                                    tempForm.method = 'POST';
-                                    
-                                    // Añadir campos del formulario
-                                    for (let key in formData) {
-                                        const input = document.createElement('input');
-                                        input.type = 'hidden';
-                                        input.name = key;
-                                        input.value = formData[key];
-                                        tempForm.appendChild(input);
-                                    }
-                                    
-                                    // Añadir al DOM y enviar
-                                    document.body.appendChild(tempForm);
-                                    
-                                    // Manejar respuesta
-                                    iframe.onload = function() {
-                                        document.body.removeChild(tempForm);
-                                        setTimeout(() => document.body.removeChild(iframe), 500);
-                                        resolve();
-                                    };
-                                    
-                                    iframe.onerror = function() {
-                                        document.body.removeChild(tempForm);
-                                        document.body.removeChild(iframe);
-                                        reject(new Error('Error en iframe'));
-                                    };
-                                    
-                                    // Enviar el formulario
-                                    tempForm.submit();
-                                    
-                                } catch (err) {
-                                    reject(err);
-                                }
-                            });
-                        }
-
-                        // Manejador principal del formulario
-                        function handleFormSubmit(event) {
-                            // Prevenir comportamiento predeterminado del formulario
-                            if (event) {
-                                event.preventDefault();
-                            }
-                            
-                            // Referencias a elementos
-                            const form = document.getElementById('contacto-form');
-                            const submitButton = form.querySelector('button[type="submit"]');
-                            const originalText = submitButton.textContent;
-                            
-                            // Deshabilitar botón y mostrar indicador de carga
-                            submitButton.textContent = 'Enviando...';
-                            submitButton.disabled = true;
-                            
-                            // Mostrar notificación de espera
-                            const notificacion = crearNotificacion('Enviando formulario...');
-
-                            // Datos del formulario
-                            const formData = {
-                                nombre: form.nombre.value,
-                                email: form.email.value,
-                                mensaje: form.mensaje.value
-                            };
-
-                            // Intentar primero con fetch
-                            enviarFormulario(form)
-                                .then(() => {
-                                    console.log('Enviado exitosamente vía fetch');
-                                    return Promise.resolve();
-                                })
-                                .catch(error => {
-                                    // Si falla fetch, intentar con iframe como respaldo
-                                    console.warn('Error con fetch, intentando alternativa:', error);
-                                    return enviarViaIframe(formData);
-                                })
-                                .then(() => {
-                                    // Éxito con cualquiera de los métodos
-                                    crearNotificacion('¡Mensaje enviado correctamente!', 'success');
-                                    form.reset();
-                                    
-                                    // Hacer scroll al inicio para confirmar visualmente
-                                    window.location.hash = 'contact';
-                                    
-                                    // Ocultar notificación después de un tiempo
-                                    setTimeout(() => {
-                                        const notif = document.getElementById('form-notificacion');
-                                        if (notif) document.body.removeChild(notif);
-                                    }, 3000);
-                                })
-                                .catch(error => {
-                                    console.error('Todos los métodos de envío fallaron:', error);
-                                    crearNotificacion('Error al enviar el formulario. Por favor, inténtelo de nuevo.', 'error');
-                                    
-                                    setTimeout(() => {
-                                        const notif = document.getElementById('form-notificacion');
-                                        if (notif) document.body.removeChild(notif);
-                                    }, 3000);
-                                })
-                                .finally(() => {
-                                    // Restaurar el botón
-                                    submitButton.textContent = originalText;
-                                    submitButton.disabled = false;
-                                });
-                        }
-                        
-                        // Configurar eventos cuando el DOM esté listo
+                    </form> 
+                    <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             const form = document.getElementById('contacto-form');
-                            if (form) {
-                                // Asegurarnos que el formulario no se enviará normalmente
-                                form.setAttribute('onsubmit', 'return false;');
-                                form.addEventListener('submit', handleFormSubmit);
-                                
-                                // Forzar bloqueo doble de envío normal
-                                const submitButton = form.querySelector('button[type="submit"]');
-                                if (submitButton) {
-                                    submitButton.onclick = function(e) {
-                                        e.preventDefault();
-                                        handleFormSubmit();
-                                        return false;
-                                    };
+                            if (!form) {
+                            console.error("No se encontró el formulario con ID 'contacto-form'");
+                            return;
+                            }
+                            
+                            const scriptURL = 'https://script.google.com/macros/s/AKfycbzVD39wEmUb78FAJ38ipB5c5C_SpWJ-JArMnzzsnwFfxp1ISt24lF_w5G3jSW6Z4H9n/exec';
+                            console.log('URL del script de Google:', scriptURL);
+                            
+                            form.addEventListener('submit', function(e) {
+                            e.preventDefault();
+                            
+                            // Desactivar botón para evitar múltiples envíos
+                            const submitButton = form.querySelector('button[type="submit"]');
+                            const originalButtonText = submitButton.textContent;
+                            submitButton.disabled = true;
+                            submitButton.textContent = 'Enviando...';
+                            
+                            // Crear objeto FormData del formulario
+                            const formData = new FormData(form);
+                            
+                            // Método 1: Envío como FormData (preferido por GAS)
+                            fetch(scriptURL, {
+                                method: 'POST',
+                                body: formData
+                            })
+                            .then(response => {
+                                console.log('Respuesta del servidor:', response);
+                                if (response.ok) {
+                                form.reset();
+                                mostrarNotificacion('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'success');
+                                } else {
+                                throw new Error('Error en la respuesta del servidor');
                                 }
-                            } else {
-                                console.error('No se encontró el formulario con ID "contacto-form"');
+                            })
+                            .catch(error => {
+                                console.error('Error al enviar el formulario:', error);
+                                mostrarNotificacion('Lo sentimos, hubo un problema al enviar tu mensaje. Por favor, intenta nuevamente.', 'error');
+                            })
+                            .finally(() => {
+                                submitButton.disabled = false;
+                                submitButton.textContent = originalButtonText;
+                            });
+                            });
+                            
+                            function mostrarNotificacion(mensaje, tipo) {
+                            // Crear notificación
+                            const notificacion = document.createElement('div');
+                            notificacion.className = `notificacion ${tipo}`;
+                            notificacion.textContent = mensaje;
+                            notificacion.style.position = 'fixed';
+                            notificacion.style.top = '20px';
+                            notificacion.style.left = '50%';
+                            notificacion.style.transform = 'translateX(-50%)';
+                            notificacion.style.padding = '12px 20px';
+                            notificacion.style.borderRadius = '4px';
+                            notificacion.style.zIndex = '1000';
+                            
+                            // Estilos según tipo
+                            if (tipo === 'success') {
+                                notificacion.style.backgroundColor = '#d4edda';
+                                notificacion.style.color = '#155724';
+                            } else if (tipo === 'error') {
+                                notificacion.style.backgroundColor = '#f8d7da';
+                                notificacion.style.color = '#721c24';
+                            }
+                            
+                            // Añadir a la página y eliminar después de 5 segundos
+                            document.body.appendChild(notificacion);
+                            setTimeout(() => {
+                                document.body.removeChild(notificacion);
+                            }, 5000);
                             }
                         });
-                    </script>
+                        </script>
                 </div>
             </div>
         </section>
