@@ -93,23 +93,40 @@
         <section id="contact" class="contact-section inter-200">
             <div class="container">
                 <h2 class="section-title inter-400">¿Listo para mostrar tu trabajo?</h2>
-                <p class="contact-description inter-200">Nos encantaría conocer tus proyectos y ayudarte a crear un portafolio impactante.</p>
-                <div class="contact-form-container">
-                    <form class="contact-form">
+                <p class="contact-description inter-200">Nos encantaría conocer tus proyectos y ayudarte a crear un portafolio impactante.</p>                <div class="contact-form-container">
+                    <form id="contacto-form" class="contact-form">
                         <div class="form-group">
-                            <label for="name" class="inter-200">Nombre</label>
-                            <input type="text" id="name" name="name" class="inter-200" required>
+                            <label for="nombre" class="inter-200">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" class="inter-200" required>
                         </div>
                         <div class="form-group">
                             <label for="email" class="inter-200">Email</label>
                             <input type="email" id="email" name="email" class="inter-200" required>
                         </div>
                         <div class="form-group">
-                            <label for="message" class="inter-200">Mensaje</label>
-                            <textarea id="message" name="message" rows="5" class="inter-200" required></textarea>
+                            <label for="mensaje" class="inter-200">Mensaje</label>
+                            <textarea id="mensaje" name="mensaje" rows="5" class="inter-200" required></textarea>
                         </div>
                         <button type="submit" class="primary-button inter-300">Enviar mensaje</button>
                     </form>
+                    <script>
+                        const endpoint = 'https://script.google.com/macros/s/AKfycbzVD39wEmUb78FAJ38ipB5c5C_SpWJ-JArMnzzsnwFfxp1ISt24lF_w5G3jSW6Z4H9n/exec';
+                        document.getElementById('contacto-form')
+                            .addEventListener('submit', async e => {
+                            e.preventDefault();
+                            const data = {
+                                nombre: e.target.nombre.value,
+                                email: e.target.email.value,
+                                mensaje: e.target.mensaje.value
+                            };
+                            const res = await fetch(endpoint, {
+                                method: 'POST',
+                                body: JSON.stringify(data)
+                            });
+                            const json = await res.json();
+                            alert(json.status === 'ok' ? '¡Mensaje enviado!' : 'Error al enviar.');
+                        });
+                    </script>
                 </div>
             </div>
         </section>
