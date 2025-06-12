@@ -165,8 +165,7 @@
                                 console.error("No se encontró el formulario o el iframe");
                                 return;
                             }
-                            
-                            // Manejar el envío del formulario
+                              // Manejar el envío del formulario
                             form.addEventListener('submit', function(e) {
                                 // No prevenir el envío, queremos que se envíe normalmente al iframe
                                 
@@ -181,6 +180,9 @@
                                     return false;
                                 }
                                 
+                                // Marcar que el formulario ha sido enviado
+                                formSubmitted = true;
+                                
                                 // Desactivar botón para evitar múltiples envíos
                                 const submitButton = form.querySelector('button[type="submit"]');
                                 submitButton.disabled = true;
@@ -189,28 +191,47 @@
                                 // Mostrar mensaje de envío
                                 mostrarNotificacion('Enviando mensaje...', 'info');
                                 
+                                // Configurar un timeout de seguridad para restaurar el botón
+                                setTimeout(function() {
+                                    if (formSubmitted) {
+                                        // Si después de 10 segundos todavía no hay respuesta, restaurar el formulario
+                                        const infoNotif = document.querySelector('.notificacion.info');
+                                        if (infoNotif) {
+                                            document.body.removeChild(infoNotif);
+                                            mostrarNotificacion('El servidor está tardando en responder. Tu mensaje podría haberse enviado. Por favor, verifica antes de enviar de nuevo.', 'error');
+                                        }
+                                        submitButton.disabled = false;
+                                        submitButton.textContent = 'Enviar mensaje';
+                                    }
+                                }, 10000);
+                                
                                 // Permitir el envío del formulario al iframe
                                 return true;
                             });
+                              // Variable para controlar el estado de carga
+                            let formSubmitted = false;
                             
                             // Cuando el iframe se cargue después del envío
                             iframe.onload = function() {
-                                // El primer onload ocurre cuando la página carga, ignoramos ese
-                                if (!iframe.firstLoad) {
-                                    iframe.firstLoad = true;
-                                    return;
-                                }
+                                // Ignorar la carga inicial de la página
+                                if (!formSubmitted) return;
                                 
-                                // Resetear formulario y mostrar éxito
-                                form.reset();
-                                mostrarNotificacion('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'success');
-                                
-                                // Restaurar botón de envío
-                                const submitButton = form.querySelector('button[type="submit"]');
-                                if (submitButton) {
-                                    submitButton.disabled = false;
-                                    submitButton.textContent = 'Enviar mensaje';
-                                }
+                                // Procesar la respuesta después del envío
+                                setTimeout(function() {
+                                    // Resetear formulario y mostrar éxito
+                                    form.reset();
+                                    mostrarNotificacion('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'success');
+                                    
+                                    // Restaurar botón de envío
+                                    const submitButton = form.querySelector('button[type="submit"]');
+                                    if (submitButton) {
+                                        submitButton.disabled = false;
+                                        submitButton.textContent = 'Enviar mensaje';
+                                    }
+                                    
+                                    // Resetear bandera de envío
+                                    formSubmitted = false;
+                                }, 1000);
                             };
                             
                             // Manejar errores
@@ -224,9 +245,7 @@
                                     submitButton.textContent = 'Enviar mensaje';
                                 }
                             };
-                        });
-                    </script>
-                        </script>
+                        });                    </script>
                 </div>
             </div>
         </section>
