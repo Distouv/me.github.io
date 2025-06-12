@@ -93,8 +93,7 @@
         <section id="contact" class="contact-section inter-200">
             <div class="container">
                 <h2 class="section-title inter-400">¿Listo para mostrar tu trabajo?</h2>
-                <p class="contact-description inter-200">Nos encantaría conocer tus proyectos y ayudarte a crear un portafolio impactante.</p>                <div class="contact-form-container">
-                    <form id="contacto-form" class="contact-form" method="POST" action="javascript:void(0);">
+                <p class="contact-description inter-200">Nos encantaría conocer tus proyectos y ayudarte a crear un portafolio impactante.</p>                <div class="contact-form-container">                    <form id="contacto-form" class="contact-form" target="hidden_iframe" method="POST" action="https://script.google.com/macros/s/AKfycbzVD39wEmUb78FAJ38ipB5c5C_SpWJ-JArMnzzsnwFfxp1ISt24lF_w5G3jSW6Z4H9n/exec">
                         <div class="form-group">
                             <label for="nombre" class="inter-200">Nombre</label>
                             <input type="text" id="nombre" name="nombre" class="inter-200" required>
@@ -108,131 +107,125 @@
                             <textarea id="mensaje" name="mensaje" rows="5" class="inter-200" required></textarea>
                         </div>
                         <button type="submit" class="primary-button inter-300">Enviar mensaje</button>
-                    </form>                    <script>
+                    </form>
+                    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>                    <script>
+                        // Función para mostrar notificaciones
+                        function mostrarNotificacion(mensaje, tipo) {
+                            // Eliminar notificaciones existentes
+                            const notificacionesExistentes = document.querySelectorAll('.notificacion');
+                            notificacionesExistentes.forEach(n => {
+                                if (document.body.contains(n)) {
+                                    document.body.removeChild(n);
+                                }
+                            });
+                            
+                            // Crear notificación
+                            const notificacion = document.createElement('div');
+                            notificacion.className = `notificacion ${tipo}`;
+                            notificacion.textContent = mensaje;
+                            notificacion.style.position = 'fixed';
+                            notificacion.style.top = '20px';
+                            notificacion.style.left = '50%';
+                            notificacion.style.transform = 'translateX(-50%)';
+                            notificacion.style.padding = '12px 20px';
+                            notificacion.style.borderRadius = '4px';
+                            notificacion.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                            notificacion.style.zIndex = '1000';
+                            
+                            // Estilos según tipo
+                            if (tipo === 'success') {
+                                notificacion.style.backgroundColor = '#d4edda';
+                                notificacion.style.color = '#155724';
+                            } else if (tipo === 'error') {
+                                notificacion.style.backgroundColor = '#f8d7da';
+                                notificacion.style.color = '#721c24';
+                            } else {
+                                notificacion.style.backgroundColor = '#f8f9fa';
+                                notificacion.style.color = '#212529';
+                            }
+                            
+                            // Añadir a la página y eliminar después de un tiempo
+                            document.body.appendChild(notificacion);
+                            if (tipo !== 'info') {
+                                setTimeout(() => {
+                                    if (document.body.contains(notificacion)) {
+                                        document.body.removeChild(notificacion);
+                                    }
+                                }, 5000);
+                            }
+                            return notificacion;
+                        }
+                        
+                        // Configuración del formulario con iframe para evitar problemas CORS
                         document.addEventListener('DOMContentLoaded', function() {
                             const form = document.getElementById('contacto-form');
-                            if (!form) {
-                                console.error("No se encontró el formulario con ID 'contacto-form'");
+                            const iframe = document.getElementById('hidden_iframe');
+                            
+                            if (!form || !iframe) {
+                                console.error("No se encontró el formulario o el iframe");
                                 return;
                             }
                             
-                            const scriptURL = 'https://script.google.com/macros/s/AKfycbzVD39wEmUb78FAJ38ipB5c5C_SpWJ-JArMnzzsnwFfxp1ISt24lF_w5G3jSW6Z4H9n/exec';
-                            console.log('URL del script de Google:', scriptURL);
-                            
-                            // Función para manejar el envío del formulario
+                            // Manejar el envío del formulario
                             form.addEventListener('submit', function(e) {
-                                e.preventDefault();
+                                // No prevenir el envío, queremos que se envíe normalmente al iframe
+                                
+                                // Validar campos del formulario
+                                const nombre = form.nombre.value;
+                                const email = form.email.value;
+                                const mensaje = form.mensaje.value;
+                                
+                                if (!nombre || !email || !mensaje) {
+                                    e.preventDefault();
+                                    mostrarNotificacion('Por favor complete todos los campos.', 'error');
+                                    return false;
+                                }
                                 
                                 // Desactivar botón para evitar múltiples envíos
                                 const submitButton = form.querySelector('button[type="submit"]');
-                                const originalButtonText = submitButton.textContent;
                                 submitButton.disabled = true;
                                 submitButton.textContent = 'Enviando...';
                                 
-                                // Obtener datos del formulario
-                                const nombre = form.querySelector('#nombre').value;
-                                const email = form.querySelector('#email').value;
-                                const mensaje = form.querySelector('#mensaje').value;
+                                // Mostrar mensaje de envío
+                                mostrarNotificacion('Enviando mensaje...', 'info');
                                 
-                                // Verificar que todos los campos estén completos
-                                if (!nombre || !email || !mensaje) {
-                                    mostrarNotificacion('Por favor complete todos los campos.', 'error');
-                                    submitButton.disabled = false;
-                                    submitButton.textContent = originalButtonText;
+                                // Permitir el envío del formulario al iframe
+                                return true;
+                            });
+                            
+                            // Cuando el iframe se cargue después del envío
+                            iframe.onload = function() {
+                                // El primer onload ocurre cuando la página carga, ignoramos ese
+                                if (!iframe.firstLoad) {
+                                    iframe.firstLoad = true;
                                     return;
                                 }
                                 
-                                // Crear y mostrar indicador de carga
-                                mostrarNotificacion('Enviando mensaje...', 'info');
+                                // Resetear formulario y mostrar éxito
+                                form.reset();
+                                mostrarNotificacion('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'success');
                                 
-                                // Método JSONP para evitar problemas de CORS
-                                // Nota: Esta técnica usa un iframe invisible que evade las restricciones de CORS
-                                const iframe = document.createElement('iframe');
-                                iframe.name = 'hidden_iframe';
-                                iframe.style.display = 'none';
-                                document.body.appendChild(iframe);
-                                
-                                // Configurar el formulario para enviar a través del iframe
-                                form.target = 'hidden_iframe';
-                                form.action = scriptURL;
-                                form.method = 'POST';
-                                
-                                // Cuando el iframe se cargue (después del envío), consideramos que fue exitoso
-                                iframe.onload = function() {
-                                    console.log('Enviado correctamente a través del iframe');
-                                    form.reset();
-                                    mostrarNotificacion('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'success');
-                                    
-                                    // Restaurar estado del formulario
-                                    form.target = '';
-                                    form.action = 'javascript:void(0);';
+                                // Restaurar botón de envío
+                                const submitButton = form.querySelector('button[type="submit"]');
+                                if (submitButton) {
                                     submitButton.disabled = false;
-                                    submitButton.textContent = originalButtonText;
-                                    
-                                    // Eliminar el iframe después de un tiempo para limpieza
-                                    setTimeout(() => {
-                                        document.body.removeChild(iframe);
-                                    }, 1000);
-                                };
-                                
-                                // En caso de error en el iframe
-                                iframe.onerror = function() {
-                                    console.error('Error con el iframe');
-                                    mostrarNotificacion('Lo sentimos, hubo un problema al enviar tu mensaje. Por favor, intenta nuevamente.', 'error');
-                                    
-                                    // Restaurar estado del formulario
-                                    form.target = '';
-                                    form.action = 'javascript:void(0);';
-                                    submitButton.disabled = false;
-                                    submitButton.textContent = originalButtonText;
-                                    document.body.removeChild(iframe);
-                                };
-                                
-                                // Enviar el formulario a través del iframe
-                                form.submit();
-                            });
+                                    submitButton.textContent = 'Enviar mensaje';
+                                }
+                            };
                             
-                            function mostrarNotificacion(mensaje, tipo) {
-                                // Eliminar notificaciones existentes
-                                const notificacionesExistentes = document.querySelectorAll('.notificacion');
-                                notificacionesExistentes.forEach(n => document.body.removeChild(n));
+                            // Manejar errores
+                            iframe.onerror = function() {
+                                mostrarNotificacion('Lo sentimos, hubo un problema al enviar tu mensaje. Por favor, intenta nuevamente.', 'error');
                                 
-                                // Crear notificación
-                                const notificacion = document.createElement('div');
-                                notificacion.className = `notificacion ${tipo}`;
-                                notificacion.textContent = mensaje;
-                                notificacion.style.position = 'fixed';
-                                notificacion.style.top = '20px';
-                                notificacion.style.left = '50%';
-                                notificacion.style.transform = 'translateX(-50%)';
-                                notificacion.style.padding = '12px 20px';
-                                notificacion.style.borderRadius = '4px';
-                                notificacion.style.zIndex = '1000';
-                                
-                                // Estilos según tipo
-                                if (tipo === 'success') {
-                                    notificacion.style.backgroundColor = '#d4edda';
-                                    notificacion.style.color = '#155724';
-                                } else if (tipo === 'error') {
-                                    notificacion.style.backgroundColor = '#f8d7da';
-                                    notificacion.style.color = '#721c24';
-                                } else {
-                                    notificacion.style.backgroundColor = '#f8f9fa';
-                                    notificacion.style.color = '#212529';
+                                // Restaurar botón de envío
+                                const submitButton = form.querySelector('button[type="submit"]');
+                                if (submitButton) {
+                                    submitButton.disabled = false;
+                                    submitButton.textContent = 'Enviar mensaje';
                                 }
-                                
-                                // Añadir a la página y eliminar después de 5 segundos
-                                document.body.appendChild(notificacion);
-                                if (tipo !== 'info') { // Mantener notificación de info hasta que cambie
-                                    setTimeout(() => {
-                                        if (document.body.contains(notificacion)) {
-                                            document.body.removeChild(notificacion);
-                                        }
-                                    }, 5000);
-                                }
-                                return notificacion;
-                            }
+                            };
                         });
+                    </script>
                         </script>
                 </div>
             </div>
