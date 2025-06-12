@@ -108,23 +108,87 @@
                             <textarea id="mensaje" name="mensaje" rows="5" class="inter-200" required></textarea>
                         </div>
                         <button type="submit" class="primary-button inter-300">Enviar mensaje</button>
-                    </form>
-                    <script>
-                        const endpoint = 'https://script.google.com/macros/s/AKfycbzVD39wEmUb78FAJ38ipB5c5C_SpWJ-JArMnzzsnwFfxp1ISt24lF_w5G3jSW6Z4H9n/exec';
-                        document.getElementById('contacto-form')
-                            .addEventListener('submit', async e => {
-                            e.preventDefault();
-                            const data = {
-                                nombre: e.target.nombre.value,
-                                email: e.target.email.value,
-                                mensaje: e.target.mensaje.value
-                            };
-                            const res = await fetch(endpoint, {
+                    </form>                    <script>
+                        // URL del script de Google
+                        const scriptURL = 'https://script.google.com/macros/s/AKfycbzVD39wEmUb78FAJ38ipB5c5C_SpWJ-JArMnzzsnwFfxp1ISt24lF_w5G3jSW6Z4H9n/exec';
+                        
+                        // Función para manejar formularios compatibles con cualquier dominio
+                        function handleFormSubmit(event) {
+                            event.preventDefault();
+                            
+                            // Obtener el formulario y el botón
+                            const form = event.target;
+                            const submitButton = form.querySelector('button[type="submit"]');
+                            const originalText = submitButton.textContent;
+                            
+                            // Desactivar el botón durante el envío
+                            submitButton.textContent = 'Enviando...';
+                            submitButton.disabled = true;
+                            
+                            // Crear el objeto de datos del formulario
+                            const formData = new FormData(form);
+                            
+                            // Mostrar notificación de espera
+                            const notificacion = document.createElement('div');
+                            notificacion.style.position = 'fixed';
+                            notificacion.style.top = '10px';
+                            notificacion.style.left = '50%';
+                            notificacion.style.transform = 'translateX(-50%)';
+                            notificacion.style.backgroundColor = '#f8f9fa';
+                            notificacion.style.color = '#212529';
+                            notificacion.style.padding = '12px 20px';
+                            notificacion.style.borderRadius = '4px';
+                            notificacion.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                            notificacion.style.zIndex = '1000';
+                            notificacion.textContent = 'Enviando formulario...';
+                            document.body.appendChild(notificacion);
+                            
+                            // Enviar el formulario usando fetch con modo no-cors
+                            fetch(scriptURL, {
                                 method: 'POST',
-                                body: JSON.stringify(data)
+                                body: formData,
+                                mode: 'no-cors' // Importante para evitar errores CORS
+                            })
+                            .then(response => {
+                                // Con modo no-cors no podemos realmente acceder a la respuesta,
+                                // así que asumimos éxito si llegamos aquí
+                                notificacion.textContent = '¡Mensaje enviado correctamente!';
+                                notificacion.style.backgroundColor = '#d4edda';
+                                notificacion.style.color = '#155724';
+                                
+                                // Limpiar formulario
+                                form.reset();
+                                
+                                // Retrasar para mostrar el éxito antes de ocultar
+                                setTimeout(() => {
+                                    document.body.removeChild(notificacion);
+                                }, 3000);
+                            })
+                            .catch(error => {
+                                console.error('Error al enviar formulario:', error);
+                                notificacion.textContent = 'Error al enviar el formulario';
+                                notificacion.style.backgroundColor = '#f8d7da';
+                                notificacion.style.color = '#721c24';
+                                
+                                setTimeout(() => {
+                                    document.body.removeChild(notificacion);
+                                }, 3000);
+                            })
+                            .finally(() => {
+                                // Restaurar el botón sin importar el resultado
+                                submitButton.textContent = originalText;
+                                submitButton.disabled = false;
                             });
-                            const json = await res.json();
-                            alert(json.status === 'ok' ? '¡Mensaje enviado!' : 'Error al enviar.');
+                        }
+                        
+                        // Esperar a que el DOM esté listo
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const form = document.getElementById('contacto-form');
+                            if (form) {
+                                form.addEventListener('submit', handleFormSubmit);
+                            } else {
+                                console.error('No se encontró el formulario con ID "contacto-form"');
+                            }
                         });
                     </script>
                 </div>
