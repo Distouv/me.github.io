@@ -108,81 +108,129 @@
                             <textarea id="mensaje" name="mensaje" rows="5" class="inter-200" required></textarea>
                         </div>
                         <button type="submit" class="primary-button inter-300">Enviar mensaje</button>
-                    </form> 
-                    <script>
+                    </form>                    <script>
                         document.addEventListener('DOMContentLoaded', function() {
                             const form = document.getElementById('contacto-form');
                             if (!form) {
-                            console.error("No se encontró el formulario con ID 'contacto-form'");
-                            return;
+                                console.error("No se encontró el formulario con ID 'contacto-form'");
+                                return;
                             }
                             
                             const scriptURL = 'https://script.google.com/macros/s/AKfycbzVD39wEmUb78FAJ38ipB5c5C_SpWJ-JArMnzzsnwFfxp1ISt24lF_w5G3jSW6Z4H9n/exec';
                             console.log('URL del script de Google:', scriptURL);
                             
+                            // Función para manejar el envío del formulario
                             form.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            
-                            // Desactivar botón para evitar múltiples envíos
-                            const submitButton = form.querySelector('button[type="submit"]');
-                            const originalButtonText = submitButton.textContent;
-                            submitButton.disabled = true;
-                            submitButton.textContent = 'Enviando...';
-                            
-                            // Crear objeto FormData del formulario
-                            const formData = new FormData(form);
-                            
-                            // Método 1: Envío como FormData (preferido por GAS)
-                            fetch(scriptURL, {
-                                method: 'POST',
-                                body: formData
-                            })
-                            .then(response => {
-                                console.log('Respuesta del servidor:', response);
-                                if (response.ok) {
-                                form.reset();
-                                mostrarNotificacion('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'success');
-                                } else {
-                                throw new Error('Error en la respuesta del servidor');
+                                e.preventDefault();
+                                
+                                // Desactivar botón para evitar múltiples envíos
+                                const submitButton = form.querySelector('button[type="submit"]');
+                                const originalButtonText = submitButton.textContent;
+                                submitButton.disabled = true;
+                                submitButton.textContent = 'Enviando...';
+                                
+                                // Obtener datos del formulario
+                                const nombre = form.querySelector('#nombre').value;
+                                const email = form.querySelector('#email').value;
+                                const mensaje = form.querySelector('#mensaje').value;
+                                
+                                // Verificar que todos los campos estén completos
+                                if (!nombre || !email || !mensaje) {
+                                    mostrarNotificacion('Por favor complete todos los campos.', 'error');
+                                    submitButton.disabled = false;
+                                    submitButton.textContent = originalButtonText;
+                                    return;
                                 }
-                            })
-                            .catch(error => {
-                                console.error('Error al enviar el formulario:', error);
-                                mostrarNotificacion('Lo sentimos, hubo un problema al enviar tu mensaje. Por favor, intenta nuevamente.', 'error');
-                            })
-                            .finally(() => {
-                                submitButton.disabled = false;
-                                submitButton.textContent = originalButtonText;
-                            });
+                                
+                                // Crear y mostrar indicador de carga
+                                mostrarNotificacion('Enviando mensaje...', 'info');
+                                
+                                // Método JSONP para evitar problemas de CORS
+                                // Nota: Esta técnica usa un iframe invisible que evade las restricciones de CORS
+                                const iframe = document.createElement('iframe');
+                                iframe.name = 'hidden_iframe';
+                                iframe.style.display = 'none';
+                                document.body.appendChild(iframe);
+                                
+                                // Configurar el formulario para enviar a través del iframe
+                                form.target = 'hidden_iframe';
+                                form.action = scriptURL;
+                                form.method = 'POST';
+                                
+                                // Cuando el iframe se cargue (después del envío), consideramos que fue exitoso
+                                iframe.onload = function() {
+                                    console.log('Enviado correctamente a través del iframe');
+                                    form.reset();
+                                    mostrarNotificacion('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'success');
+                                    
+                                    // Restaurar estado del formulario
+                                    form.target = '';
+                                    form.action = 'javascript:void(0);';
+                                    submitButton.disabled = false;
+                                    submitButton.textContent = originalButtonText;
+                                    
+                                    // Eliminar el iframe después de un tiempo para limpieza
+                                    setTimeout(() => {
+                                        document.body.removeChild(iframe);
+                                    }, 1000);
+                                };
+                                
+                                // En caso de error en el iframe
+                                iframe.onerror = function() {
+                                    console.error('Error con el iframe');
+                                    mostrarNotificacion('Lo sentimos, hubo un problema al enviar tu mensaje. Por favor, intenta nuevamente.', 'error');
+                                    
+                                    // Restaurar estado del formulario
+                                    form.target = '';
+                                    form.action = 'javascript:void(0);';
+                                    submitButton.disabled = false;
+                                    submitButton.textContent = originalButtonText;
+                                    document.body.removeChild(iframe);
+                                };
+                                
+                                // Enviar el formulario a través del iframe
+                                form.submit();
                             });
                             
                             function mostrarNotificacion(mensaje, tipo) {
-                            // Crear notificación
-                            const notificacion = document.createElement('div');
-                            notificacion.className = `notificacion ${tipo}`;
-                            notificacion.textContent = mensaje;
-                            notificacion.style.position = 'fixed';
-                            notificacion.style.top = '20px';
-                            notificacion.style.left = '50%';
-                            notificacion.style.transform = 'translateX(-50%)';
-                            notificacion.style.padding = '12px 20px';
-                            notificacion.style.borderRadius = '4px';
-                            notificacion.style.zIndex = '1000';
-                            
-                            // Estilos según tipo
-                            if (tipo === 'success') {
-                                notificacion.style.backgroundColor = '#d4edda';
-                                notificacion.style.color = '#155724';
-                            } else if (tipo === 'error') {
-                                notificacion.style.backgroundColor = '#f8d7da';
-                                notificacion.style.color = '#721c24';
-                            }
-                            
-                            // Añadir a la página y eliminar después de 5 segundos
-                            document.body.appendChild(notificacion);
-                            setTimeout(() => {
-                                document.body.removeChild(notificacion);
-                            }, 5000);
+                                // Eliminar notificaciones existentes
+                                const notificacionesExistentes = document.querySelectorAll('.notificacion');
+                                notificacionesExistentes.forEach(n => document.body.removeChild(n));
+                                
+                                // Crear notificación
+                                const notificacion = document.createElement('div');
+                                notificacion.className = `notificacion ${tipo}`;
+                                notificacion.textContent = mensaje;
+                                notificacion.style.position = 'fixed';
+                                notificacion.style.top = '20px';
+                                notificacion.style.left = '50%';
+                                notificacion.style.transform = 'translateX(-50%)';
+                                notificacion.style.padding = '12px 20px';
+                                notificacion.style.borderRadius = '4px';
+                                notificacion.style.zIndex = '1000';
+                                
+                                // Estilos según tipo
+                                if (tipo === 'success') {
+                                    notificacion.style.backgroundColor = '#d4edda';
+                                    notificacion.style.color = '#155724';
+                                } else if (tipo === 'error') {
+                                    notificacion.style.backgroundColor = '#f8d7da';
+                                    notificacion.style.color = '#721c24';
+                                } else {
+                                    notificacion.style.backgroundColor = '#f8f9fa';
+                                    notificacion.style.color = '#212529';
+                                }
+                                
+                                // Añadir a la página y eliminar después de 5 segundos
+                                document.body.appendChild(notificacion);
+                                if (tipo !== 'info') { // Mantener notificación de info hasta que cambie
+                                    setTimeout(() => {
+                                        if (document.body.contains(notificacion)) {
+                                            document.body.removeChild(notificacion);
+                                        }
+                                    }, 5000);
+                                }
+                                return notificacion;
                             }
                         });
                         </script>
