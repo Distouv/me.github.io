@@ -94,6 +94,10 @@
             <div class="container">
                 <h2 class="section-title inter-400">¿Listo para mostrar tu trabajo?</h2>
                 <p class="contact-description inter-200">Nos encantaría conocer tus proyectos y ayudarte a crear un portafolio impactante.</p>                <div class="contact-form-container">                    <form id="contacto-form" class="contact-form" target="hidden_iframe" method="POST" action="https://script.google.com/macros/s/AKfycbwU2SU2Steu2vv1DsvbgGn3DfL-y5ttXWXqtr-YoOeyhZ1fvD1mpf611wi1J2m99pxZ/exec">
+                        <!-- Campo oculto para señalar el formato -->
+                        <input type="hidden" name="formato" value="web-form">
+                        <input type="hidden" name="sitio" value="me.distouv.blog">
+                        
                         <div class="form-group">
                             <label for="nombre" class="inter-200">Nombre</label>
                             <input type="text" id="nombre" name="nombre" class="inter-200" required>
@@ -106,9 +110,13 @@
                             <label for="mensaje" class="inter-200">Mensaje</label>
                             <textarea id="mensaje" name="mensaje" rows="5" class="inter-200" required></textarea>
                         </div>
+                        <!-- Campo anti-spam -->
+                        <div style="display:none">
+                            <input type="text" name="honeypot" value="">
+                        </div>
                         <button type="submit" class="primary-button inter-300">Enviar mensaje</button>
                     </form>
-                    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>                    <script>
+                    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {window.location='#contact';}"></iframe><script>
                         // Función para mostrar notificaciones
                         function mostrarNotificacion(mensaje, tipo) {
                             // Eliminar notificaciones existentes
@@ -155,8 +163,7 @@
                             }
                             return notificacion;
                         }
-                        
-                        // Configuración del formulario con iframe para evitar problemas CORS
+                          // Configuración del formulario con iframe para evitar problemas CORS
                         document.addEventListener('DOMContentLoaded', function() {
                             const form = document.getElementById('contacto-form');
                             const iframe = document.getElementById('hidden_iframe');
@@ -165,59 +172,20 @@
                                 console.error("No se encontró el formulario o el iframe");
                                 return;
                             }
-                              // Manejar el envío del formulario
-                            form.addEventListener('submit', function(e) {
-                                // No prevenir el envío, queremos que se envíe normalmente al iframe
-                                
-                                // Validar campos del formulario
-                                const nombre = form.nombre.value;
-                                const email = form.email.value;
-                                const mensaje = form.mensaje.value;
-                                
-                                if (!nombre || !email || !mensaje) {
-                                    e.preventDefault();
-                                    mostrarNotificacion('Por favor complete todos los campos.', 'error');
-                                    return false;
-                                }
-                                
-                                // Marcar que el formulario ha sido enviado
-                                formSubmitted = true;
-                                
-                                // Desactivar botón para evitar múltiples envíos
-                                const submitButton = form.querySelector('button[type="submit"]');
-                                submitButton.disabled = true;
-                                submitButton.textContent = 'Enviando...';
-                                
-                                // Mostrar mensaje de envío
-                                mostrarNotificacion('Enviando mensaje...', 'info');
-                                
-                                // Configurar un timeout de seguridad para restaurar el botón
-                                setTimeout(function() {
-                                    if (formSubmitted) {
-                                        // Si después de 10 segundos todavía no hay respuesta, restaurar el formulario
-                                        const infoNotif = document.querySelector('.notificacion.info');
-                                        if (infoNotif) {
-                                            document.body.removeChild(infoNotif);
-                                            mostrarNotificacion('El servidor está tardando en responder. Tu mensaje podría haberse enviado. Por favor, verifica antes de enviar de nuevo.', 'error');
-                                        }
-                                        submitButton.disabled = false;
-                                        submitButton.textContent = 'Enviar mensaje';
-                                    }
-                                }, 10000);
-                                
-                                // Permitir el envío del formulario al iframe
-                                return true;
-                            });
-                              // Variable para controlar el estado de carga
+
+                            // Variable para controlar el estado de carga
                             let formSubmitted = false;
+                            console.log("Formulario inicializado y encontrado:", form.id);
                             
                             // Cuando el iframe se cargue después del envío
                             iframe.onload = function() {
+                                console.log("Iframe onload, formSubmitted:", formSubmitted);
                                 // Ignorar la carga inicial de la página
                                 if (!formSubmitted) return;
                                 
                                 // Procesar la respuesta después del envío
                                 setTimeout(function() {
+                                    console.log("Procesando respuesta de formulario");
                                     // Resetear formulario y mostrar éxito
                                     form.reset();
                                     mostrarNotificacion('¡Mensaje enviado con éxito! Nos pondremos en contacto contigo pronto.', 'success');
@@ -234,8 +202,53 @@
                                 }, 1000);
                             };
                             
-                            // Manejar errores
-                            iframe.onerror = function() {
+                            // Manejar el envío del formulario
+                            form.addEventListener('submit', function(e) {
+                                console.log("Formulario enviado");
+                                // Validar campos del formulario
+                                const nombre = form.nombre.value;
+                                const email = form.email.value;
+                                const mensaje = form.mensaje.value;
+                                
+                                if (!nombre || !email || !mensaje) {
+                                    e.preventDefault();
+                                    mostrarNotificacion('Por favor complete todos los campos.', 'error');
+                                    return false;
+                                }
+                                  // Marcar que el formulario ha sido enviado
+                                formSubmitted = true;
+                                window.submitted = true; // Variable global para el iframe
+                                console.log("formSubmitted establecido a true");
+                                
+                                // Desactivar botón para evitar múltiples envíos
+                                const submitButton = form.querySelector('button[type="submit"]');
+                                submitButton.disabled = true;
+                                submitButton.textContent = 'Enviando...';
+                                
+                                // Mostrar mensaje de envío
+                                mostrarNotificacion('Enviando mensaje...', 'info');
+                                
+                                // Configurar un timeout de seguridad para restaurar el botón
+                                setTimeout(function() {
+                                    if (formSubmitted) {
+                                        console.log("Timeout de seguridad activado");
+                                        // Si después de 10 segundos todavía no hay respuesta, restaurar el formulario
+                                        const infoNotif = document.querySelector('.notificacion.info');
+                                        if (infoNotif) {
+                                            document.body.removeChild(infoNotif);
+                                            mostrarNotificacion('El servidor está tardando en responder. Tu mensaje podría haberse enviado. Por favor, verifica antes de enviar de nuevo.', 'error');
+                                        }
+                                        submitButton.disabled = false;
+                                        submitButton.textContent = 'Enviar mensaje';
+                                    }
+                                }, 10000);
+                                
+                                // Permitir el envío del formulario al iframe
+                                return true;
+                            });
+                              // Manejar errores
+                            iframe.onerror = function(errorEvent) {
+                                console.error("Error en el iframe:", errorEvent);
                                 mostrarNotificacion('Lo sentimos, hubo un problema al enviar tu mensaje. Por favor, intenta nuevamente.', 'error');
                                 
                                 // Restaurar botón de envío
@@ -244,7 +257,12 @@
                                     submitButton.disabled = false;
                                     submitButton.textContent = 'Enviar mensaje';
                                 }
+                                // Resetear bandera
+                                formSubmitted = false;
                             };
+                            
+                            // Variable global para facilitar la detección del envío desde iframe
+                            window.submitted = false;
                         });                    </script>
                 </div>
             </div>
