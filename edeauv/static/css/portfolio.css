@@ -9,6 +9,7 @@
 .hero-container {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 4rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
@@ -32,7 +33,7 @@
 /* Vertical 4:3 aspect ratio (3:4 actually for vertical orientation) */
 .profile-photo.vertical {
     aspect-ratio: 3/4;
-    max-height: 700px;
+    max-height: 800px;
     width: auto;
 }
 
@@ -123,11 +124,28 @@
     flex: 0 0 40%;
 }
 
+.widescreen-photo {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    aspect-ratio: 16/9;  /* 16:9 aspect ratio */
+    object-fit: cover;
+}
+
+/* Removed square-photo class or kept for backward compatibility */
 .square-photo {
     width: 100%;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     aspect-ratio: 1/1;
+    object-fit: cover;
+}
+
+.vertical-widescreen-photo {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    aspect-ratio: 9/16;  /* Vertical 16:9 (which is 9:16) */
     object-fit: cover;
 }
 
@@ -319,6 +337,10 @@
     .about-image {
         margin-top: 2rem;
         order: -1;
+    }
+    
+    .widescreen-photo {
+        max-width: 100%;
     }
 }
 
