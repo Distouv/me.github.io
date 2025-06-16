@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Distouv Me - Portal de presentación de portafolios web">
+    <link rel="stylesheet" href="/static/css/general.css">
+    <link rel="stylesheet" href="static/css/index_new.css">
+    <link rel="stylesheet" href="static/css/portfolio.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>R. Tomás Iligaray</title>
+</head>
+<body>
+    <div id="navbar"></div>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="portfolio-section">
+        <!-- Hero Section -->
+        <div class="hero-container">
+            <div class="hero-image">
+                <img src="/edeauv/resources/images/2.jpeg" alt="Mi foto de perfil" class="profile-photo vertical">
+            </div>
+            <div class="hero-content">
+                <h1>R. Tomás Iligaray</h1>
+                <p class="subtitle">Desarrollador Web & Diseñador</p>
+                <p class="brief-description">Apasionado por crear experiencias digitales innovadoras y funcionales que combinan tecnología y diseño.</p>
+            </div>
+        </div>
+
+        <!-- Social Media Section -->
+        <div class="social-section">
+            <h2>Mis Redes</h2>
+            <div class="social-buttons">
+                <a href="mailto:tu.correo@ejemplo.com" class="social-btn email">
+                    <i class="fas fa-envelope"></i> Correo
+                </a>
+                <a href="https://www.instagram.com/tucuenta/" class="social-btn instagram">
+                    <i class="fab fa-instagram"></i> Instagram
+                </a>
+                <a href="https://vsco.co/tucuenta/" class="social-btn vsco">
+                    <i class="fas fa-camera"></i> VSCO
+                </a>
+                <a href="https://www.linkedin.com/in/tucuenta/" class="social-btn linkedin">
+                    <i class="fab fa-linkedin"></i> LinkedIn
+                </a>
+                <a href="https://github.com/tucuenta" class="social-btn github">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+
+        <!-- About Me Section -->
+        <div class="about-section">
+            <div class="about-content">
+                <h2>Sobre Mí</h2>
+                <p>Soy un desarrollador web apasionado por crear soluciones digitales que combinen funcionalidad y estética. 
+                Mi experiencia abarca tanto el frontend como el backend, utilizando tecnologías modernas para desarrollar 
+                aplicaciones web innovadoras. Me enfoco en crear interfaces intuitivas y experiencias de usuario excepcionales.</p>
+                
+                <!-- Education & Certifications -->
+                <div class="education">
+                    <h3>Estudios y Certificaciones</h3>
+                    <ul>
+                        <li>
+                            <span class="year">2022</span>
+                            <span class="degree">Licenciatura en Informática</span>
+                            <span class="institution">Universidad Ejemplo</span>
+                        </li>
+                        <li>
+                            <span class="year">2021</span>
+                            <span class="degree">Certificación en Desarrollo Web</span>
+                            <span class="institution">Platzi</span>
+                        </li>
+                        <li>
+                            <span class="year">2020</span>
+                            <span class="degree">Certificación en UX/UI Design</span>
+                            <span class="institution">Google</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="about-image">
+                <img src="./assets/profile-square.jpg" alt="Foto profesional" class="square-photo">
+            </div>
+        </div>
+
+        <!-- Projects Section -->
+        <div class="projects-section">
+            <h2>Mis Proyectos</h2>
+            <p>Estos son algunos de mis proyectos destacados de GitHub:</p>
+            <div id="github-repos" class="repos-container">
+                <!-- GitHub repositories will be loaded here dynamically -->
+                <div class="loading">Cargando proyectos...</div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="contact-section">
+            <div class="contact-content">
+                <h2>¿Interesado en trabajar juntos?</h2>
+                <a href="mailto:tu.correo@ejemplo.com" class="contact-btn">Contáctame</a>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer"></div>    
+
+    <!-- Scripts for layout components (navbar and footer) -->
+    <script src="./static/js/layout.js"></script>
+    
+    <!-- Scripts for GitHub Repository Loading -->
+    <script src="static/js/portfolio.js"></script>
+    
+    <script>
+        // Load navbar and footer from root partials
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load navbar from partials
+            fetch('../resources/partials/navbar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('navbar').innerHTML = data;
+                })
+                .catch(error => console.error('Error loading navbar:', error));
+                
+            // Load footer from partials
+            fetch('../resources/partials/footer.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('footer').innerHTML = data;
+                })
+                .catch(error => console.error('Error loading footer:', error));
+        });
+    </script>
+</body>
+</html>
