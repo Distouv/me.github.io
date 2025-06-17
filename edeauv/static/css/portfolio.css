@@ -1,4 +1,41 @@
 /* Portfolio Main Styles */
+
+/* Estilos para la cita destacada */
+.quote-highlight {
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    margin: 1.5rem 0;
+    padding: 1rem 2rem;
+    border-left: 2px solid #0e2a3d;
+    background-color: rgba(24, 68, 97, 0.055);
+    position: relative;
+}
+
+.quote-highlight p {
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.6;
+    color: #333;
+    font-weight: 500;
+}
+
+.quote-highlight cite {
+    display: block;
+    text-align: right;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    color: #777;
+    font-weight: 400;
+}
+
+.parrafos {
+    font-size: 1rem;
+    margin: 0;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
 .portfolio-section {
     padding: 0;
     font-family: 'Inter', sans-serif;
@@ -27,7 +64,8 @@
     flex: 0 0 auto;
     display: flex;
     justify-content: flex-start;
-    height: calc(100vh - 40px); /* Ajustado para considerar el alto del navbar */
+    min-height: 100%; /* Ajustado para considerar el alto del navbar */
+    width: auto;
     position: sticky;
     top: 40px; /* Alineado con la parte inferior del navbar */
     left: 0;
@@ -168,18 +206,36 @@
     margin-right: 20px; /* Margen derecho adicional */
     word-wrap: break-word; /* Permitir que el texto se rompa adecuadamente */
     overflow-wrap: break-word; /* Asegurarse de que el texto largo se rompa */
-    max-width: 100%; /* Asegurar que no exceda el ancho del contenedor */
+    max-width: 60%; /* Limitar el ancho para dejar espacio para la imagen */
     padding-right: 20px; /* Padding adicional a la derecha */
     box-sizing: border-box; /* El padding no afecta al ancho total */
+    order: 1; /* Asegurar que el contenido aparezca primero */
+}
+
+.about-content.full-width {
+    flex: 1 1 100%; /* Ancho completo */
+    max-width: 100%; /* Ocupar todo el ancho disponible */
+    order: 3; /* Asegurar que aparezca después de la imagen y el texto */
+    margin-top: 2rem; /* Espacio adicional arriba */
 }
 
 .about-image {
-    flex: 1 1 300px; /* Flexible pero con un mínimo de 300px */
+    height: auto;
+    flex: 1 1 300px; /* Reducido para una imagen vertical */
     display: flex;
     justify-content: center; /* Centrar la imagen */
-    align-items: center;
-    max-width: 100%; /* Asegurar que no exceda el ancho del contenedor */
+    align-items: flex-start; /* Alinear con la parte superior del contenedor */
+    max-width: 40%; /* Reducido para una imagen vertical */
     box-sizing: border-box; /* El padding no afecta al ancho total */
+    order: 2; /* Asegurar que aparezca después del contenido de texto */
+}
+
+.about-image .vertical-widescreen-photo {
+    height: 100%; /* Ajustar la altura al 100% del contenedor */
+    max-width: 100%; /* Limitar el ancho máximo */
+    aspect-ratio: 9/16; /* Proporción vertical de 9:16 */
+    object-fit: cover; /* Mantener la proporción y recortar si es necesario */
+    object-position: center; /* Centrar la imagen */
 }
 
 .widescreen-photo {
@@ -200,15 +256,15 @@
 }
 
 .vertical-widescreen-photo {
-    max-height: 600px;
-    width: auto;
+    width: auto; /* Permitir que el ancho se ajuste automáticamente */
+    height: auto; /* La altura se ajustará automáticamente basada en el aspect-ratio */
     max-width: 100%; /* Asegurar que no exceda el ancho del contenedor */
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    aspect-ratio: 9/16;  /* Vertical 16:9 (which is 9:16) */
+    aspect-ratio: 9/16; /* Proporción vertical de 9:16 */
     object-fit: cover;
     display: block; /* Mejorar la alineación */
-    margin: 0 auto; /* Centrar la imagen */
+    margin: 0 auto; /* Centrar la imagen horizontalmente */
 }
 
 .about-section h2 {
@@ -620,6 +676,7 @@
     .about-content, 
     .about-image {
         flex: 0 0 100%;
+        max-width: 100%;
     }
     
     .hero-image {
@@ -631,12 +688,22 @@
     }
     
     .about-image {
-        margin-top: 2rem;
-        order: -1;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        order: 2; /* Mantener después del texto */
     }
     
-    .widescreen-photo {
-        max-width: 100%;
+    .about-content {
+        order: 1; /* Mantener primero */
+    }
+    
+    .about-content.full-width {
+        order: 3; /* Mantener al final */
+    }
+    
+    .vertical-widescreen-photo {
+        max-height: 400px;
+        margin: 0 auto; /* Centrar en móviles */
     }
 }
 

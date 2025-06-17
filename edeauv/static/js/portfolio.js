@@ -75,11 +75,12 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error fetching repos:', error);
             reposContainer.innerHTML = `<div class="loading">Error al cargar repositorios: ${error.message}</div>`;
         }
-    }
-      // Call the function to fetch and display repos
+    }    // Call the function to fetch and display repos
     fetchRepositories();
-      // Carrusel animado y mejorado
-    // Función para inicializar el carrusel    function initCarousel() {
+    
+    // Carrusel animado y mejorado
+    // Función para inicializar el carrusel
+    function initCarousel() {
         const carousel = document.querySelector('.carousel-wrapper');
         const leftEdge = document.querySelector('.carousel-edge.left-edge');
         const rightEdge = document.querySelector('.carousel-edge.right-edge');
