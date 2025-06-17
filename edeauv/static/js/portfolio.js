@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     // GitHub username - update this to your GitHub username
-    const username = 'tucuenta'; // Change this to your actual GitHub username
+    const username = '756e6e616d6564'; // Change this to your actual GitHub username
     
     // Get the container where repos will be displayed
     const reposContainer = document.getElementById('github-repos');
-    
-    // Function to fetch GitHub repositories
+      // Function to fetch GitHub repositories
     async function fetchRepositories() {
         try {
             const response = await fetch(`https://api.github.com/users/${username}/repos?sort=updated&direction=desc`);
@@ -46,8 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     month: 'short',
                     day: 'numeric'
                 });
-                
-                repoCard.innerHTML = `
+                  repoCard.innerHTML = `
                     <div class="repo-name">${repo.name}</div>
                     <div class="repo-description">${repo.description || 'Sin descripción'}</div>
                     <div class="repo-details">
@@ -55,12 +53,20 @@ document.addEventListener('DOMContentLoaded', function() {
                             ${repo.language ? 
                                 `<span class="language-dot" style="background-color: ${languageColor}"></span>
                                  ${repo.language}` : 
-                                'Sin lenguaje'
+                                '<span class="language-dot" style="background-color: #cccccc"></span> Sin lenguaje'
                             }
                         </div>
-                        <div class="repo-updated">Actualizado: ${formattedDate}</div>
+                        <div class="repo-updated"><i class="fas fa-history"></i> ${formattedDate}</div>
                     </div>
-                    <a href="${repo.html_url}" target="_blank" class="repo-link">Ver proyecto →</a>
+                    <div class="repo-stats">
+                        ${repo.stargazers_count ? 
+                            `<span class="repo-stat"><i class="fas fa-star"></i> ${repo.stargazers_count}</span>` : ''
+                        }
+                        ${repo.forks_count ? 
+                            `<span class="repo-stat"><i class="fas fa-code-branch"></i> ${repo.forks_count}</span>` : ''
+                        }
+                    </div>
+                    <a href="${repo.html_url}" target="_blank" class="repo-link">Ver proyecto <i class="fas fa-external-link-alt"></i></a>
                 `;
                 
                 reposContainer.appendChild(repoCard);
@@ -70,12 +76,13 @@ document.addEventListener('DOMContentLoaded', function() {
             if (repos.length === 0) {
                 reposContainer.innerHTML = '<div class="loading">No se encontraron repositorios</div>';
             }
-            
-        } catch (error) {
+              } catch (error) {
             console.error('Error fetching repos:', error);
             reposContainer.innerHTML = `<div class="loading">Error al cargar repositorios: ${error.message}</div>`;
         }
-    }    // Call the function to fetch and display repos
+    }
+    
+    // Call the function to fetch and display repos
     fetchRepositories();
     
     // Carrusel animado y mejorado

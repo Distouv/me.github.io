@@ -91,26 +91,83 @@
 }
 
 /* Media queries para dispositivos móviles */
+@media (max-width: 992px) {
+    .hero-container {
+        gap: 1.5rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.3rem;
+    }
+    
+    .brief-description {
+        font-size: 1.1rem;
+    }
+}
+
 @media (max-width: 768px) {
     .hero-container {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        min-height: auto;
+        padding: 2rem 1rem;
     }
     
     .hero-image {
         width: 100%;
         height: auto;
         max-height: 70vh;
+        position: relative;
+        top: 0;
     }
     
     .profile-photo.vertical {
         width: 100%;
         height: auto;
+        max-height: 60vh;
         object-fit: cover;
+        border-radius: 8px;
     }
     
     .hero-content {
-        padding: 2rem;
+        padding: 2rem 1rem;
+        text-align: center;
+    }
+    
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-container {
+        padding: 1rem 0.5rem;
+    }
+    
+    .profile-photo.vertical {
+        max-height: 50vh;
+    }
+    
+    .hero-content {
+        padding: 1.5rem 1rem;
+    }
+    
+    .hero-content h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .brief-description {
+        font-size: 1rem;
     }
 }
 
@@ -565,103 +622,175 @@
 
 .repos-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 2rem;
+    margin-top: 2rem;
 }
 
 .repo-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    padding: 1.5rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    padding: 1.75rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.repo-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(to bottom, #3498db, #2980b9);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .repo-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+    border-color: rgba(52, 152, 219, 0.2);
+}
+
+.repo-card:hover::before {
+    opacity: 1;
 }
 
 .repo-name {
-    font-size: 1.2rem;
-    font-weight: 600;
+    font-size: 1.4rem;
+    font-weight: 700;
     color: #2c3e50;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+    position: relative;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .repo-description {
     font-size: 0.95rem;
-    color: #7f8c8d;
-    margin-bottom: 1rem;
-    line-height: 1.4;
+    color: #5d6d7e;
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+    flex-grow: 1;
 }
 
 .repo-details {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-size: 0.85rem;
     color: #7f8c8d;
+    margin-bottom: 1rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid #f0f0f0;
 }
 
 .repo-language {
     display: flex;
     align-items: center;
+    font-weight: 600;
 }
 
 .language-dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    margin-right: 5px;
+    margin-right: 6px;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.8);
+}
+
+.repo-updated {
+    font-style: italic;
+    color: #95a5a6;
 }
 
 .repo-link {
     color: #3498db;
     text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    background-color: rgba(52, 152, 219, 0.08);
+    transition: all 0.2s ease;
+    align-self: flex-start;
+    margin-top: auto;
 }
 
 .repo-link:hover {
-    text-decoration: underline;
+    background-color: rgba(52, 152, 219, 0.2);
+    color: #3498db;
 }
 
-.loading {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 2rem;
-    color: #7f8c8d;
-}
-
-/* Contact Section */
-.contact-section {
-    background-color: #ffd700; /* Yellow background */
-    padding: 4rem 2rem;
-    text-align: center;
-}
-
-.contact-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.contact-section h2 {
-    color: #2c3e50;
-    margin-bottom: 1.5rem;
-}
-
-.contact-btn {
-    display: inline-block;
-    padding: 1rem 2.5rem;
-    background-color: #2c3e50;
+.repo-link:active {
+    background-color: #3498db;
     color: white;
-    font-weight: 600;
-    border-radius: 30px;
-    text-decoration: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-.contact-btn:hover {
-    background-color: #1a252f;
-    transform: translateY(-3px);
+.repo-link {
+    padding: 0.7rem 1.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Fix para pantallas muy pequeñas */
+@media (max-width: 320px) {
+    .projects-section h2 {
+        font-size: 1.6rem;
+    }
+    
+    .repo-name {
+        font-size: 1rem;
+    }
+    
+    .repo-stats {
+        flex-wrap: wrap;
+    }
+}
+
+/* Optimizaciones globales para pantallas táctiles y móviles */
+@media (hover: none) {
+    .repo-card:hover {
+        transform: none;
+    }
+    
+    .repo-card:active {
+        transform: translateY(-3px);
+        transition: transform 0.1s ease;
+    }
+}
+
+/* Mejoras de usabilidad para dispositivos táctiles */
+@media (max-width: 768px) {
+    .repo-link {
+        padding: 0.7rem 1.5rem;
+        margin-top: 0.5rem;
+    }
+    
+    /* Aumentar área de toque para elementos interactivos */
+    .repo-details,
+    .repo-stats,
+    .repo-language {
+        padding: 0.3rem 0;
+    }
+    
+    /* Mejorar la visualización de iconos en móviles */
+    .loading i {
+        font-size: 2.5rem;
+    }
+    
+    /* Asegurar texto legible en pantallas pequeñas */
+    .repo-description {
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
 }
 
 /* Responsive Design */
@@ -820,3 +949,191 @@
     70% { transform: translateX(5px); }
     100% { transform: translateX(0); }
 }
+
+.repo-stats {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+.repo-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.repo-stat i {
+    color: #3498db;
+}
+
+.repo-updated i {
+    margin-right: 0.35rem;
+}
+
+/* Estilos adicionales para la sección de proyectos */
+.projects-section {
+    padding: 4rem 2rem;
+    background-color: #f9fafc;
+}
+
+.projects-section h2 {
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.projects-section > p {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 2rem;
+    font-size: 1.1rem;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.projects-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.view-all-projects {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #3498db;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(52, 152, 219, 0.15);
+}
+
+.view-all-projects:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(52, 152, 219, 0.2);
+}
+
+.loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 3rem;
+    color: #7f8c8d;
+    font-size: 1.1rem;
+}
+
+.loading i {
+    font-size: 2rem;
+    color: #3498db;
+}
+
+/* Mejoras para responsive */
+/* Pantallas grandes (tablets horizontales, pantallas pequeñas de escritorio) */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 90%;
+    }
+    
+    .repos-container {
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+}
+
+/* Pantallas medianas (tablets) */
+@media (max-width: 992px) {
+    .repos-container {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.25rem;
+    }
+    
+    .repo-name {
+        font-size: 1.25rem;
+    }
+    
+    .repo-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Pantallas pequeñas (móviles en modo horizontal y tablets verticales) */
+@media (max-width: 768px) {
+    .repos-container {
+        grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+    }
+    
+    .projects-section {
+        padding: 3rem 1rem;
+    }
+    
+    .repo-card {
+        padding: 1.25rem;
+    }
+    
+    .repo-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    .view-all-projects {
+        padding: 0.6rem 1.2rem;
+    }
+}
+
+/* Pantallas muy pequeñas (móviles) */
+@media (max-width: 576px) {
+    .container {
+        width: 95%;
+    }
+    
+    .projects-section h2 {
+        font-size: 1.8rem;
+    }
+    
+    .projects-section > p {
+        font-size: 1rem;
+    }
+    
+    .repo-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .repo-stats {
+        margin-top: 0.5rem;
+    }
+    
+    .loading {
+        padding: 2rem;
+    }
+}
+
+/* Ajustes específicos para dispositivos muy pequeños */
+@media (max-width: 400px) {
+    .repo-card {
+        padding: 1rem;
+    }
+    
+    .repo-name {
+        font-size: 1.1rem;
+    }
+    
+    .repo-link {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+
