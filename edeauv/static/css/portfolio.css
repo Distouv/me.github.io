@@ -6,6 +6,7 @@
     text-align: center; /* Centrar texto horizontalmente */
     padding: 40px 20px;
     margin-top: 3rem;
+    color: #FFFFFF; /* Texto blanco para toda la sección */
 }
 
 .contact-section .contact-content {
@@ -15,25 +16,26 @@
 
 .contact-section h2 {
     margin-bottom: 20px;
-    color: #333;
+    font-size: 3rem;
+    color: #000000; /* Cambiado a blanco */
 }
 
 .contact-btn {
     display: inline-block;
-    background-color: #333;
-    color: #FFD700;
+    background-color: #000000; /* Cambiado a negro */
+    color: #FFFFFF; /* Cambiado a blanco */
     padding: 12px 30px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: bold;
     transition: all 0.3s ease;
-    border: 2px solid #333;
+    border: 2px solid #000000; /* Cambiado a negro */
 }
 
 .contact-btn:hover {
-    background-color: transparent;
-    color: #333;
-    border: 2px solid #333;
+    background-color: #fff8ce;
+    color: #000000; /* Cambiado a blanco */
+    border: 2px solid #ffffff3a; /* Cambiado a blanco */
 }
 
 /* Estilos para la cita destacada */
@@ -470,12 +472,11 @@
     display: flex;
     overflow-x: auto;
     scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
     gap: 1.5rem;
     padding: 1rem 1rem;
     -ms-overflow-style: none;  /* IE y Edge */
     scrollbar-width: none;  /* Firefox */
-    transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition: all 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .carousel-wrapper::-webkit-scrollbar {
@@ -489,16 +490,15 @@
     padding: 1.5rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-top: 4px solid #3498db;
-    scroll-snap-align: start;
     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    min-height: 180px;
+    min-height: 220px; /* Aumentado para acomodar el icono */
     display: flex;
     flex-direction: column;
     position: relative;
     transform-origin: center center;
     animation: fadeIn 0.6s ease-out forwards;
-    opacity: 0.7;
-    filter: blur(0px);
+    opacity: 0.85;
+    text-align: center; /* Centrar el contenido */
 }
 
 @keyframes fadeIn {
@@ -525,6 +525,10 @@
     box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
     background-color: #ffffff;
     border-top-width: 6px;
+}
+
+.carousel-item:hover .year {
+    color: #2980b9;
 }
 
 .carousel-item::after {
@@ -596,46 +600,36 @@
     left: 100%;
 }
 
-/* Indicador de navegación del carrusel */
-.carousel-dots {
-    display: flex;
-    justify-content: center;
-    margin-top: 1rem;
-    gap: 0.5rem;
-}
-
-.carousel-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: var(--medium-gray, #bdc3c7);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.carousel-dot.active {
-    background-color: #3498db;
-    transform: scale(1.2);
+/* Mejoras para el scroll suave del carrusel */
+@keyframes floatEffect {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+    100% { transform: translateY(0px); }
 }
 
 .year {
     font-weight: 700;
     color: #3498db;
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.6rem;
+    letter-spacing: 1px;
 }
 
 .degree {
     font-weight: 600;
     display: block;
-    margin: 0.3rem 0 0.8rem;
+    margin: 0.4rem 0 1rem;
     flex-grow: 1;
+    line-height: 1.4;
 }
 
 .institution {
     font-style: italic;
     color: #7f8c8d;
     font-size: 0.9rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(52, 152, 219, 0.3);
+    display: block;
 }
 
 /* Projects Section */
@@ -1170,6 +1164,254 @@
         padding: 0.4rem 1rem;
         font-size: 0.9rem;
     }
+}
+
+/* Estilos para los iconos de certificaciones en el carrusel */
+.cert-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #3498db, #9b59b6);
+    border-radius: 50%;
+    margin: 0 auto 1rem auto;
+    box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+    color: white;
+    font-size: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+}
+
+.cert-icon::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    right: -10px;
+    bottom: -10px;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.carousel-item:hover .cert-icon {
+    transform: scale(1.15) rotate(5deg);
+}
+
+.carousel-item:hover .cert-icon::before {
+    opacity: 1;
+    animation: pulseLight 2s infinite;
+}
+
+@keyframes pulseLight {
+    0% { opacity: 0.2; }
+    50% { opacity: 0.6; }
+    100% { opacity: 0.2; }
+}
+
+/* Estilos para los certificados clickeables */
+.cert-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+
+.view-cert {
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    color: #3498db;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.carousel-item:hover .view-cert {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.carousel-item .view-cert i {
+    font-size: 0.9rem;
+}
+
+/* Modal de certificados */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s forwards;
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: auto;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+.close-modal {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    color: #333;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    z-index: 10;
+}
+
+.close-modal:hover {
+    color: #e74c3c;
+}
+
+.modal h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+    font-weight: 600;
+    padding-right: 40px;
+}
+
+.certificate-container {
+    position: relative;
+    width: 100%;
+    height: 60vh;
+    background-color: #f5f6fa;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.certificate-container.web-view {
+    height: 70vh; /* Mayor altura para página web */
+    background-color: #ffffff;
+}
+
+#certificateFrame {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: #ffffff;
+}
+
+.certificate-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(245, 246, 250, 0.8);
+    font-size: 1.2rem;
+    color: #3498db;
+}
+
+.certificate-loading i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    animation: spin 2s infinite linear;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+}
+
+.download-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #3498db;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+    background-color: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(41, 128, 185, 0.3);
+}
+
+@media (max-width: 768px) {
+    .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+    
+    .certificate-container {
+        height: 50vh;
+    }
+    
+    .modal h3 {
+        font-size: 1.2rem;
+    }
+}
+
+@media (min-width: 992px) {
+    .modal-content {
+        width: 90%;
+        max-width: 1000px; /* Mayor ancho para certificados web */
+    }
+}
+
+/* Animation for modal */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 

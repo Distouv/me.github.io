@@ -84,31 +84,18 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Call the function to fetch and display repos
     fetchRepositories();
-    
-    // Carrusel animado y mejorado
+      // Carrusel animado y mejorado
     // Función para inicializar el carrusel
     function initCarousel() {
         const carousel = document.querySelector('.carousel-wrapper');
         const leftEdge = document.querySelector('.carousel-edge.left-edge');
         const rightEdge = document.querySelector('.carousel-edge.right-edge');
-        const dotsContainer = document.querySelector('.carousel-dots');
         
         if (!carousel || !leftEdge || !rightEdge) return;
         
         const items = carousel.querySelectorAll('.carousel-item');
         let currentIndex = 0;
         const itemWidth = 320; // Ancho aproximado de cada ítem + gap
-        
-        // Crear los puntos indicadores
-        if (dotsContainer) {
-            items.forEach((_, index) => {
-                const dot = document.createElement('div');
-                dot.classList.add('carousel-dot');
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToSlide(index));
-                dotsContainer.appendChild(dot);
-            });
-        }
         
         // Función para actualizar la clase activa
         function updateActiveClasses() {
@@ -119,97 +106,61 @@ document.addEventListener('DOMContentLoaded', function() {
                     item.classList.add('active');
                 }
             });
-            
-            // Actualizar dots
-            const dots = dotsContainer?.querySelectorAll('.carousel-dot');
-            if (dots) {
-                dots.forEach((dot, index) => {
-                    dot.classList.toggle('active', index === currentIndex);
-                });
-            }
-        }
-          // Función para ir a un slide específico
+        }        // Función para ir a un slide específico
         function goToSlide(index) {
             if (index < 0) index = 0;
             if (index >= items.length) index = items.length - 1;
             
-            // Si ya estamos en el límite, añadir un pequeño efecto de rebote visual
-            if (index === currentIndex && (index === 0 || index === items.length - 1)) {
-                const edgeEffect = (index === 0) ? 'left-edge-bounce' : 'right-edge-bounce';
-                carousel.classList.add(edgeEffect);
-                setTimeout(() => carousel.classList.remove(edgeEffect), 400);
-                return;
-            }
-            
             currentIndex = index;
-            
-            // Aplicar efecto de desvanecimiento durante la transición
-            carousel.style.opacity = '0.9';
+            scrollPosition = index * itemWidth;
             
             // Animación suave al slide
             carousel.scrollTo({
-                left: index * itemWidth,
+                left: scrollPosition,
                 behavior: 'smooth'
             });
             
-            // Restaurar opacidad después de la transición
-            setTimeout(() => {
-                carousel.style.opacity = '1';
-            }, 300);
-            
             updateActiveClasses();
         }
-          // Variables para controlar el hover
-        let hoverTimer = null;
-        let isHovering = false;
         
-        // Función para manejar el hover en los extremos
-        function handleEdgeHover(direction) {
-            if (isHovering) return;
-            isHovering = true;
+        // Variables para controlar la navegación manual
+        let manualControl = false;
+        
+        // Función para manejar el clic en los bordes
+        function handleEdgeClick(direction) {
+            manualControl = true;
+            stopAutoplay();
             
-            // Primera acción inmediata
             if (direction === 'left') {
-                goToSlide(currentIndex - 1);
-                animateCarouselShift('left');
+                scrollPosition = Math.max(0, scrollPosition - itemWidth);
             } else {
-                goToSlide(currentIndex + 1);
-                animateCarouselShift('right');
+                scrollPosition = Math.min(totalWidth - itemWidth, scrollPosition + itemWidth);
             }
             
-            // Continuar desplazando si se mantiene el hover
-            hoverTimer = setInterval(() => {
-                if (direction === 'left') {
-                    goToSlide(currentIndex - 1);
-                    animateCarouselShift('left');
-                } else {
-                    goToSlide(currentIndex + 1);
-                    animateCarouselShift('right');
-                }
-            }, 2000); // Intervalo más largo para dar tiempo a ver el contenido
+            carousel.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+            
+            // Actualizar el índice actual
+            const newIndex = Math.floor(scrollPosition / itemWidth);
+            if (newIndex !== currentIndex && newIndex < items.length) {
+                currentIndex = newIndex;
+                updateActiveClasses();
+            }
+            
+            // Volver a la reproducción automática después de 3 segundos
+            setTimeout(() => {
+                manualControl = false;
+            }, 3000);
         }
-        
-        function stopHover() {
-            clearInterval(hoverTimer);
-            isHovering = false;
-        }
-        
-        // Navegar al hacer hover en los extremos
-        leftEdge.addEventListener('mouseenter', () => handleEdgeHover('left'));
-        leftEdge.addEventListener('mouseleave', stopHover);
-        
-        rightEdge.addEventListener('mouseenter', () => handleEdgeHover('right'));
-        rightEdge.addEventListener('mouseleave', stopHover);
-        
-        // También permitir navegación por clic para dispositivos táctiles
+          // Navegación por clic en los bordes
         leftEdge.addEventListener('click', () => {
-            goToSlide(currentIndex - 1);
-            animateCarouselShift('left');
+            handleEdgeClick('left');
         });
         
         rightEdge.addEventListener('click', () => {
-            goToSlide(currentIndex + 1);
-            animateCarouselShift('right');
+            handleEdgeClick('right');
         });
         
         // Efecto visual de desplazamiento
@@ -228,18 +179,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 updateActiveClasses();
             }
         });
-        
-        // Touch swipe functionality para móviles
+          // Touch swipe functionality para móviles
         let touchStartX = 0;
         let touchEndX = 0;
         
         carousel.addEventListener('touchstart', (e) => {
+            stopAutoplay();
             touchStartX = e.changedTouches[0].screenX;
         }, { passive: true });
         
         carousel.addEventListener('touchend', (e) => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
+            
+            // Reiniciar autoplay después de 3 segundos
+            setTimeout(() => {
+                if (!carousel.matches(':hover')) {
+                    startAutoplay();
+                }
+            }, 3000);
         }, { passive: true });
         
         function handleSwipe() {
@@ -247,29 +205,58 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (touchEndX < touchStartX - swipeThreshold) {
                 // Swipe left, go right
-                goToSlide(currentIndex + 1);
-                animateCarouselShift('right');
+                scrollPosition = Math.min(totalWidth - itemWidth, scrollPosition + itemWidth);
             }
             
             if (touchEndX > touchStartX + swipeThreshold) {
                 // Swipe right, go left
-                goToSlide(currentIndex - 1);
-                animateCarouselShift('left');
+                scrollPosition = Math.max(0, scrollPosition - itemWidth);
+            }
+            
+            carousel.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+            
+            // Actualizar el índice actual
+            const newIndex = Math.floor(scrollPosition / itemWidth);
+            if (newIndex !== currentIndex && newIndex < items.length) {
+                currentIndex = newIndex;
+                updateActiveClasses();
             }
         }
+          // Auto-reproducción del carrusel con movimiento suave y continuo
+        let animationFrame;
+        let scrollPosition = 0;
+        const scrollSpeed = 0.5; // Velocidad más lenta (píxeles por frame)
+        const totalWidth = items.length * itemWidth;
         
-        // Auto-reproducción del carrusel
-        let autoplayInterval;
+        function animateCarousel() {
+            if (scrollPosition >= totalWidth) {
+                // Volvemos al principio cuando llegamos al final
+                scrollPosition = 0;
+                carousel.scrollTo({ left: 0, behavior: 'auto' });
+            } else {
+                scrollPosition += scrollSpeed;
+                carousel.scrollTo({ left: scrollPosition, behavior: 'auto' });
+            }
+            
+            // Actualizar el índice actual basado en la posición
+            const newIndex = Math.floor(scrollPosition / itemWidth);
+            if (newIndex !== currentIndex && newIndex < items.length) {
+                currentIndex = newIndex;
+                updateActiveClasses();
+            }
+            
+            animationFrame = requestAnimationFrame(animateCarousel);
+        }
         
         function startAutoplay() {
-            autoplayInterval = setInterval(() => {
-                const nextIndex = (currentIndex + 1) % items.length;
-                goToSlide(nextIndex);
-            }, 5000); // Cambiar cada 5 segundos
+            animationFrame = requestAnimationFrame(animateCarousel);
         }
         
         function stopAutoplay() {
-            clearInterval(autoplayInterval);
+            cancelAnimationFrame(animationFrame);
         }
         
         // Iniciar autoplay
@@ -287,4 +274,102 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Inicializar el carrusel
     initCarousel();
+});
+// Funcionalidad del modal de certificados
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('certificateModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const certificateFrame = document.getElementById('certificateFrame');
+    const downloadBtn = document.getElementById('downloadCert');
+    const closeModal = document.querySelector('.close-modal');
+    const certLoading = document.querySelector('.certificate-loading');
+    const certItems = document.querySelectorAll('.carousel-item');
+    
+    // Si el modal no existe en la página, no continuamos
+    if (!modal) return;    // Función para abrir el modal y mostrar el certificado
+    function openCertificateModal(certPath, certTitle) {
+        // Determinar si es una URL completa o un archivo local
+        let fullPath;
+        let isWebUrl = certPath.startsWith('http');
+        
+        if (isWebUrl) {
+            // Es una URL web directa
+            fullPath = certPath;
+            
+            // Actualizamos el botón de descarga para que sea un enlace externo
+            downloadBtn.innerHTML = '<i class="fas fa-external-link-alt"></i> Visitar sitio';
+            downloadBtn.removeAttribute('download');
+            downloadBtn.setAttribute('target', '_blank');
+        } else {
+            // Es un archivo local (PDF u otro)
+            fullPath = `/edeauv/resources/certifications/${certPath}`;
+            
+            // Configuración normal para descarga
+            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Descargar';
+            downloadBtn.setAttribute('download', certPath);
+            downloadBtn.setAttribute('target', '_blank');
+        }
+        
+        // Actualizamos el título y la fuente del iframe
+        modalTitle.textContent = certTitle;
+        certificateFrame.src = fullPath;
+        downloadBtn.href = fullPath;
+          // Mostramos el modal con animación
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.classList.add('show');
+        }, 10);
+        document.body.style.overflow = 'hidden'; // Evitar scroll en el fondo
+        
+        // Mostrar el indicador de carga
+        certLoading.style.display = 'flex';
+        
+        // Ocultamos el indicador de carga cuando el iframe termina de cargar
+        certificateFrame.onload = function() {
+            certLoading.style.display = 'none';
+        };
+    }
+      // Cerrar el modal
+    function closeCertModal() {
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+            certificateFrame.src = '';
+        }, 300);
+        document.body.style.overflow = ''; // Restaurar scroll
+    }
+    
+    // Evento para cerrar el modal con el botón de cerrar
+    closeModal.addEventListener('click', function() {
+        closeCertModal();
+    });
+      // Cerrar el modal al hacer clic fuera del contenido
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeCertModal();
+        }
+    });
+    
+    // También cerrar con la tecla ESC
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+            closeCertModal();
+        }
+    });
+      // Añadir eventos a cada elemento del carrusel
+    certItems.forEach(item => {
+        const certLink = item.querySelector('.cert-link');
+        const certPath = item.dataset.cert;
+        const certTitle = item.querySelector('.degree').textContent;
+        
+        certLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            // Detener la autoreproducción del carrusel
+            if (typeof stopAutoplay === 'function') {
+                stopAutoplay();
+            }
+            // Abrir el modal con el certificado correspondiente
+            openCertificateModal(certPath, certTitle);
+        });
+    });
 });
