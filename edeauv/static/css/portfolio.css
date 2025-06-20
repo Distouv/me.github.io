@@ -1,5 +1,41 @@
 /* Portfolio Main Styles */
 
+/* Estilos para la sección de contacto */
+.contact-section {
+    background-color: #FFD700; /* Fondo amarillo */
+    text-align: center; /* Centrar texto horizontalmente */
+    padding: 40px 20px;
+    margin-top: 3rem;
+}
+
+.contact-section .contact-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.contact-section h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.contact-btn {
+    display: inline-block;
+    background-color: #333;
+    color: #FFD700;
+    padding: 12px 30px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border: 2px solid #333;
+}
+
+.contact-btn:hover {
+    background-color: transparent;
+    color: #333;
+    border: 2px solid #333;
+}
+
 /* Estilos para la cita destacada */
 .quote-highlight {
     font-family: 'Inter', sans-serif;
