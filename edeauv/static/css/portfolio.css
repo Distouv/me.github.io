@@ -381,7 +381,8 @@
     color: #3498db;
 }
 
-/* Carrusel de Certificaciones */
+/* ===== CARRUSEL DE CERTIFICACIONES ===== */
+/* Estructura principal del carrusel */
 .carousel-container {
     position: relative;
     width: 100%;
@@ -1166,6 +1167,7 @@
     }
 }
 
+/* ===== ICONOS Y ELEMENTOS DE CERTIFICACIONES ===== */
 /* Estilos para los iconos de certificaciones en el carrusel */
 .cert-icon {
     display: flex;
@@ -1244,7 +1246,7 @@
     font-size: 0.9rem;
 }
 
-/* Modal de certificados */
+/* ===== MODAL DE CERTIFICADOS ===== */
 .modal {
     display: none;
     position: fixed;
@@ -1408,10 +1410,69 @@
     }
 }
 
-/* Animation for modal */
+/* ===== ANIMACIONES DEL MODAL ===== */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+/* ===== ENLACES EXTERNOS EN CERTIFICADOS ===== */
+.external-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #0A0A23; /* Color azul oscuro de FreeCodeCamp */
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 2px solid white;
+    transition: transform 0.2s ease;
+}
+
+.carousel-item:hover .external-badge {
+    transform: scale(1.2);
+}
+
+/* Estilo especial para los iconos de certificados externos */
+.carousel-item[data-type="web"] .cert-icon {
+    position: relative;
+}
+
+/* Estilo específico para FreeCodeCamp */
+.carousel-item[data-cert*="freecodecamp.org"] .cert-icon {
+    background: linear-gradient(135deg, #0A0A23, #1B1B32); /* Colores de FreeCodeCamp */
+}
+
+/* Estilo específico para Certiprof */
+.carousel-item[data-cert*="certiprof.com"] .cert-icon {
+    background: linear-gradient(135deg, #0055a5, #0077CC); /* Colores de Certiprof */
+}
+
+/* Estilo específico para Credly */
+.carousel-item[data-cert*="credly.com"] .cert-icon {
+    background: linear-gradient(135deg, #FF6B00, #FF9E45); /* Colores de Credly (naranja) */
+}
+
+@keyframes pulse-external {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.carousel-item[data-type="web"] .view-cert i {
+    animation: pulse-external 1.5s infinite ease-in-out;
+    margin-left: 5px;
+}
+
+.carousel-item[data-type="web"]:hover .cert-icon {
+    transform: scale(1.15);
+    box-shadow: 0 5px 15px rgba(10, 10, 35, 0.4);
 }
 
 
